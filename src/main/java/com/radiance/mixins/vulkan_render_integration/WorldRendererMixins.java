@@ -458,6 +458,15 @@ public abstract class WorldRendererMixins {
         ci.cancel();
     }
 
+    // The sky buffers above are never created, so a vanilla sky pass called by another mod
+    // (e.g. Ars Nouveau's sky texture) would throw a NullPointerException.
+    @Inject(method = "renderSky(Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/Camera;ZLjava/lang/Runnable;)V",
+        at = @At(value = "HEAD"), cancellable = true)
+    public void cancelVanillaSky(PoseStack poseStack, Matrix4f projection, float partialTick,
+        Camera camera, boolean foggy, Runnable fogSetup, CallbackInfo ci) {
+        ci.cancel();
+    }
+
     @Unique
     private void dispatchWorldStage(RenderLevelStageEvent.Stage stage, Matrix4f view,
         Matrix4f projection, Camera camera, Frustum frustum) {
