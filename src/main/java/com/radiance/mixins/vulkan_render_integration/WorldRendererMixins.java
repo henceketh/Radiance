@@ -58,6 +58,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -231,9 +233,12 @@ public abstract class WorldRendererMixins {
         this.cloudRenderer.invalidate();
     }
 
-    @Redirect(method = "allChanged()V", at = @At(value = "INVOKE", target =
+    // WrapOperation rather than Redirect: mods such as SecurityCraft and Ars Nouveau redirect this call
+    // too, and two Redirects on one call fail to apply.
+    @WrapOperation(method = "allChanged()V", at = @At(value = "INVOKE", target =
         "Lnet/minecraft/client/renderer/ViewArea;repositionCamera(DD)V"))
-    public void cancelReloadCameraPosition(ViewArea instance, double x, double z) {
+    public void cancelReloadCameraPosition(ViewArea instance, double x, double z,
+        Operation<Void> original) {
 
     }
 
@@ -400,9 +405,10 @@ public abstract class WorldRendererMixins {
         this.radiance$previousCameraChunkZ = this.lastCameraChunkZ;
     }
 
-    @Redirect(method = "setupRender(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;ZZ)V", at = @At(value = "INVOKE", target =
+    @WrapOperation(method = "setupRender(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;ZZ)V", at = @At(value = "INVOKE", target =
         "Lnet/minecraft/client/renderer/ViewArea;repositionCamera(DD)V"))
-    public void cancelLegacyCameraPositionUpdate(ViewArea instance, double x, double z) {
+    public void cancelLegacyCameraPositionUpdate(ViewArea instance, double x, double z,
+        Operation<Void> original) {
 
     }
 
