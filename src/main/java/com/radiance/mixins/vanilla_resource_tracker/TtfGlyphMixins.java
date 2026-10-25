@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(TrueTypeGlyphProvider.Glyph.class)
 public class TtfGlyphMixins {
 
-    @Shadow(remap = false)
+    // The synthetic outer-instance field is not in the refmap: it is this$0 in a dev environment
+    // and f_83873_ in a production (SRG) client.
+    @Shadow(remap = false, aliases = "f_83873_")
     @Final
     @SuppressWarnings("target")
     TrueTypeGlyphProvider this$0;
