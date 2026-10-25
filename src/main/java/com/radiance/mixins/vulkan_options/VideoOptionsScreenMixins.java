@@ -123,6 +123,8 @@ public abstract class VideoOptionsScreenMixins extends OptionsSubScreen {
                 if (maxMultiplier >= 2 && Options.frameGenerationMultiplier > maxMultiplier) {
                     Options.setFrameGenerationMultiplier(maxMultiplier, true);
                 }
+                // The multiplier choices depend on the method (DLSS can go up to 4x, FSR stops at 2x).
+                client.tell(this::rebuildWidgets);
             });
 
         OptionInstance<Integer> frameGenerationMultiplier = frameGenerationMultipliers.isEmpty() ? null :
