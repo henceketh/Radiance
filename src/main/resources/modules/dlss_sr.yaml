@@ -25,3 +25,8 @@ attributeConfigs:
     performanceImpact: "high"
     type: "enum:render_pipeline.module.dlss_sr.attribute.quality_mode.quality-render_pipeline.module.dlss_sr.attribute.quality_mode.balanced-render_pipeline.module.dlss_sr.attribute.quality_mode.performance-render_pipeline.module.dlss_sr.attribute.quality_mode.ultra_performance-render_pipeline.module.dlss_sr.attribute.quality_mode.dlaa"
     value: "render_pipeline.module.dlss_sr.attribute.quality_mode.balanced"
+  - name: "render_pipeline.module.dlss_sr.attribute.model"
+    group: "settings.group.upscaling"
+    performanceImpact: "medium"
+    type: "enum:render_pipeline.module.dlss_sr.attribute.model.auto-render_pipeline.module.dlss_sr.attribute.model.k-render_pipeline.module.dlss_sr.attribute.model.m-render_pipeline.module.dlss_sr.attribute.model.l-render_pipeline.module.dlss_sr.attribute.model.j"
+    value: "render_pipeline.module.dlss_sr.attribute.model.auto"
