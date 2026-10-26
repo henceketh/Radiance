@@ -55,6 +55,8 @@ public class TtfGlyphMixins {
 
     @Overwrite
     public BakedGlyph bake(Function<SheetGlyphInfo, BakedGlyph> function) {
+        // Read this$0 here: the alias is applied to the mixin's own methods only, not to the anonymous class below.
+        ITrueTypeFontExt font = (ITrueTypeFontExt) this$0;
         return function.apply(new IRenderableGlyphExt() {
 
             @Override
@@ -69,7 +71,7 @@ public class TtfGlyphMixins {
 
             @Override
             public float getOversample() {
-                return ((ITrueTypeFontExt) this$0).getOversampleValue();
+                return font.getOversampleValue();
             }
 
             @Override
@@ -91,7 +93,6 @@ public class TtfGlyphMixins {
             public void upload(int id, int x, int y) {
                 NativeImage nativeImage = new NativeImage(NativeImage.Format.LUMINANCE, width,
                     height, false);
-                ITrueTypeFontExt font = (ITrueTypeFontExt) this$0;
                 STBTTFontinfo fontInfo = font.getFontInfo();
                 nativeImage.copyFromFont(fontInfo, index, width, height,
                     font.getScaleFactorValue(), font.getScaleFactorValue(), font.getShiftXValue(),
