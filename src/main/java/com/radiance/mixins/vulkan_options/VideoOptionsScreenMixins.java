@@ -124,7 +124,9 @@ public abstract class VideoOptionsScreenMixins extends OptionsSubScreen {
                     Options.setFrameGenerationMultiplier(maxMultiplier, true);
                 }
                 // The multiplier choices depend on the method (DLSS can go up to 4x, FSR stops at 2x).
-                client.tell(this::rebuildWidgets);
+                // Not this::rebuildWidgets: javac bridges the protected method through a static lambda that takes the
+                // mixin class as a parameter, and loading the mixin class crashes the screen.
+                client.tell(() -> this.rebuildWidgets());
             });
 
         OptionInstance<Integer> frameGenerationMultiplier = frameGenerationMultipliers.isEmpty() ? null :
