@@ -7,10 +7,12 @@ import com.radiance.client.profiler.Profiler;
 import com.radiance.client.proxy.vulkan.RendererProxy;
 import com.radiance.client.proxy.vulkan.TextureProxy;
 import com.radiance.client.texture.AuxiliaryTextures;
+import com.radiance.client.texture.TextureTracker;
 import com.radiance.client.texture.TextureTracker.TextureTarget;
 import com.radiance.mixin_related.extensions.vanilla_resource_tracker.INativeImageExt;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -77,7 +79,13 @@ public abstract class OpenGLUiNativeImageMixins implements
             INativeImageExt nativeImageExt = (INativeImageExt) this;
             TextureTarget target = nativeImageExt.radiance$getTarget();
             if (target == null) {
-                return;
+                // Mods with their own AbstractTexture (Ice and Fire's layered dragon skins) prepare the texture and
+                // upload into it while it is bound, so the bound texture is the target.
+                int bound = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+                if (!TextureTracker.GLID2Texture.containsKey(bound)) {
+                    return;
+                }
+                target = TextureTracker.captureTarget(bound);
             }
 
             TextureProxy.setClamp(target.id(),
